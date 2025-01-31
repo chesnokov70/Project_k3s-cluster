@@ -13,6 +13,7 @@ resource "aws_launch_template" "k3s_master" {
   #     curl -sfL https://get.k3s.io | sh -s - server --token u2Qw5PbXC887MMv85LeG
   #     EOF
   # )
+
   iam_instance_profile {
     name = data.aws_iam_instance_profile.k3s_node_instance_profile.name
   }
@@ -24,3 +25,10 @@ resource "aws_launch_template" "k3s_master" {
     }
   }
 }
+
+
+#    command = "scp -i ~/.ssh/ssh_instance_key.pem ~/.ssh/ssh_instance_key.pem ubuntu@${data.aws_instances.asg_instances.public_ips[0]}:/home/ubuntu/.ssh/"
+
+
+  #----------------------------------------------
+ 

@@ -31,54 +31,56 @@ users:
 ```
 
 ```
-master setup
-###
-update packages
+#-------------------------------master setup--------------------------------------
+###----------------------------update packages
 ```
 sudo apt update
 ```
 
-### install extra packages/updates
+###------------------------------ install extra packages/updates------------------
 ```
-sudo apt install apt-transport-https ca-certificates curl software-properties-common 
+sudo apt update && sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
 ```
-### launch master
+###--------------------------------launch master------------------------------------
 ```
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik --disable servicelb --tls-san 3.235.233.83" sh -s - --token u2Qw5PbXC887MMv85LeG
-```
-
-### copy ssh key
-```
-scp -i ~/Downloads/ssh-keys/jenkins-ansible.pem  /home/axelp/Downloads/ssh-keys/jenkins-ansible.pem ubuntu@3.235.233.83:/home/ubuntu/.ssh
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik --disable servicelb --tls-san 3.235.233.83" sh -s - --token u2Qw5PbXC887MMv85LeGSergeiChes
 ```
 
-### connect to the worker x2
+###--------------------------------copy ssh key--------------------------------------
+```
+
+scp -i ~/.ssh/ssh_instance_key.pem ~/.ssh/ssh_instance_key.pem ubuntu@54.89.85.221:/home/ubuntu/.ssh/
+```
+
+###---------------------------------connect to the worker x2
 ```
 ssh ubuntu@10.0.2.37 -i ~/.ssh/jenkins-ansible.pem 
 ```
-### worker setup
+###----------------------------------worker setup
 
-### connect to the worker###
+###----------------------------------connect to the worker----------------------------
 ```
 ssh ubuntu@10.0.2.37 -i ~/.ssh/jenkins-ansible.pem 
 ```
-### update apt
+###-----------------------------------update apt
 ```
 sudo apt update
 ```
-### install updated apps
+###-------------------------------------install updated apps
 
 ```
 sudo apt install apt-transport-https ca-certificates curl software-properties-common 
 ```
 
-###Launch Worker agent###
+###------------------------------------Launch Worker agent---------------------------------###
 
 ```
-curl -sfL https://get.k3s.io | sh -s - agent --server https://10.0.1.53:6443 --token u2Qw5PbXC887MMv85LeG --kubelet-arg=cloud-provider=external
+curl -sfL https://get.k3s.io | sh -s - agent --server https://10.0.1.53:6443 --token u2Qw5PbXC887MMv85LeGSergeiChes --kubelet-arg=cloud-provider=external
 ```
 
 #--------------------------------------------------------
 run
 main_setup
 control_plane_nodes
+worker_setupcd
+

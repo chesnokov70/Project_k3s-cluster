@@ -1,3 +1,16 @@
+#-----------------------------------------------------------
+
+# Creates a namespace metallb-system.
+# Defines ServiceAccounts for MetalLB's controller and speaker.
+# Grants permissions using ClusterRoles and RoleBindings.
+# Deploys MetalLB's controller as a Deployment.
+# Deploys MetalLB's speaker as a DaemonSet.
+
+#-----------------------------------------------------------
+
+
+
+# 1. Namespace Creation
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -5,6 +18,8 @@ metadata:
   labels:
     app: metallb
 ---
+# 2. Service Accounts:
+# MetalLB controller to manage LoadBalancer services.
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -13,6 +28,7 @@ metadata:
   name: controller
   namespace: metallb-system
 ---
+# MetalLB speaker component, which advertises IPs to the network.
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -21,6 +37,9 @@ metadata:
   name: speaker
   namespace: metallb-system
 ---
+# 3. ClusterRoles for Permissions (Grants the controller access to: 
+# Get, list, and watch services. Update service statuses. 
+# Create and patch events (for logging and debugging).)
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -50,6 +69,10 @@ rules:
   - create
   - patch
 ---
+# Grants the speaker access to: 
+# Get, list, and watch services, endpoints, and nodes.
+# Read EndpointSlices (used in Kubernetes service discovery).
+# Create and patch events.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -82,6 +105,11 @@ rules:
   - create
   - patch
 ---
+# 4. Role-Based Access Control (RBAC)
+# Namespace-Scoped Roles
+# config-watcher: Watches ConfigMaps inside metallb-system.
+# pod-lister: Allows listing pods inside metallb-system.
+# controller: Grants MetalLB's controller permissions for secrets and managing deployments.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -145,6 +173,8 @@ rules:
   verbs:
   - get
 ---
+# 5. RoleBindings and ClusterRoleBindings
+# These bind the previously defined roles to the respective service accounts.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -159,6 +189,7 @@ subjects:
 - kind: ServiceAccount
   name: controller
   namespace: metallb-system
+# Grants metallb-system:controller ClusterRole to controller ServiceAccount.  
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -174,6 +205,7 @@ subjects:
 - kind: ServiceAccount
   name: speaker
   namespace: metallb-system
+# Grants metallb-system:speaker ClusterRole to speaker ServiceAccount.
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -222,6 +254,8 @@ subjects:
 - kind: ServiceAccount
   name: controller
 ---
+#6. Deploying MetalLB Components
+#DaemonSet: Speaker
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -319,7 +353,10 @@ spec:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
         operator: Exists
+#Deploys MetalLB speaker as a DaemonSet (one pod per node).
+#Runs in hostNetwork: true mode to announce external IPs.        
 ---
+# Deployment: Controller
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -390,7 +427,9 @@ spec:
         fsGroup: 65534
       serviceAccountName: controller
       terminationGracePeriodSeconds: 0
+# Deploys MetalLB controller as a Deployment (only one replica).      
 ---
+# 7. ConfigMap for MetalLB Configuration
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -403,3 +442,7 @@ data:
       protocol: layer2
       addresses:
       - 192.168.1.67-192.168.1.67
+# Defines an IP pool for MetalLB.
+# Uses layer2 mode, which announces the IP over the local network.
+# The IP range 192.168.1.67 is assigned to LoadBalancer services.      
+
