@@ -32,3 +32,28 @@ data "aws_iam_instance_profile" "k3s_node_instance_profile" {
 data "aws_instance" "k3s_master_instance_public_dns" {
   instance_id = data.aws_instances.asg_instances.ids[0]
 }
+
+data "aws_ami" "ubuntu_ami" {
+  most_recent = true
+  
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
+  }
+  
+  filter {
+    name = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "owner-id"
+    values = ["099720109477"] # Canonical's AWS account ID
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+
+}

@@ -1,15 +1,11 @@
 #-----------------------------------------------------------
-
 # Creates a namespace metallb-system.
 # Defines ServiceAccounts for MetalLB's controller and speaker.
 # Grants permissions using ClusterRoles and RoleBindings.
 # Deploys MetalLB's controller as a Deployment.
 # Deploys MetalLB's speaker as a DaemonSet.
-
+#Configures MetalLB with an IP range
 #-----------------------------------------------------------
-
-
-
 # 1. Namespace Creation
 apiVersion: v1
 kind: Namespace

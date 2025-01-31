@@ -288,28 +288,4 @@ data:
 # Defines an IP pool for MetalLB.
 # Uses layer2 mode, which announces the IP over the local network.
 # The IP range 192.168.1.67 is assigned to LoadBalancer services.
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  # Name of the ClusterRole
-  name: metallb-speaker-role
-rules:
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["get", "list"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  # Name of the ClusterRoleBinding
-  name: metallb-speaker-binding
-subjects:
-- kind: ServiceAccount
-  name: speaker
-  namespace: metallb-system
-roleRef:
-  kind: ClusterRole
-  name: metallb-speaker-role
-  apiGroup: rbac.authorization.k8s.io
 
