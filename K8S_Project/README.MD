@@ -84,3 +84,5 @@ main_setup
 control_plane_nodes
 worker_setupcd
 
+kubectl label node ip-10-0-2-12 node-role.kubernetes.io/worker=worker
+kubectl label node ip-10-0-2-21 node-role.kubernetes.io/worker=worker 
