@@ -11,7 +11,7 @@ pipeline {
 
     environment {
         GIT_REPO_URL = 'git@github.com:chesnokov70/Project_k3s-cluster.git'
-        CREDENTIALS_ID = 'ssh_git_key' // Replace with your credential ID in Jenkins
+        CREDENTIALS_ID = 'ssh-jenkins-git-key' // Replace with your credential ID in Jenkins
     }
 
     stages {
