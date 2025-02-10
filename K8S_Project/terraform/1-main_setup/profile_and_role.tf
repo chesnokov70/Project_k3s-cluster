@@ -14,50 +14,17 @@ resource "aws_iam_role" "k3s_node_role" {
     Version = "2012-10-17",
     Statement = [
       {
-			"Action": [
-				"ec2:*",
-				"s3:*",
-				"iam:CreateRole",
-				"iam:DeleteRole",
-				"iam:AttachRolePolicy",
-				"iam:DetachRolePolicy",
-				"iam:PutRolePolicy",
-				"iam:ListAttachedRolePolicies",
-				"iam:ListRolePolicies",
-				"iam:ListRoleTags",
-				"iam:GetRole",
-				"iam:GetRolePolicy",
-				"iam:PassRole",
-				"iam:ListRoles",
-				"iam:DeleteRolePolicy",
-				"iam:CreateInstanceProfile",
-				"iam:ListInstanceProfilesForRole",
-				"iam:GetInstanceProfile",
-				"iam:DeleteRole",
-				"iam:DeleteInstanceProfile",
-				"iam:AddRoleToInstanceProfile",
-				"iam:RemoveRoleFromInstanceProfile",
-				"iam:TagRole",
-				"iam:GetPolicy",
-				"iam:ListPolicies",
-				"autoscaling:Describe*",
-				"autoscaling:UpdateAutoScalingGroup",
-				"autoscaling:CreateAutoScalingGroup",
-				"autoscaling:DeleteAutoScalingGroup",
-				"ssm:GetParameter",
-				"ssm:GetParameters",
-				"ssm:DescribeParameters",
-				"ssm:PutParameter",
-				"ssm:ListTagsForResource",
-				"ssm:DeleteParameter"
-			],
-			"Effect": "Allow",
-			"Resource": "*"
-		}
-
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
     ]
   })
 }
+
+
 
 resource "aws_iam_role_policy_attachment" "k3s_nlb_policy_attachment" {
   role       = aws_iam_role.k3s_node_role.name
