@@ -110,8 +110,8 @@ pipeline {
             steps {
                 dir('K8S_Project/ansible/') {
                     sh '''
-                    ansible-playbook master-setup.yaml
-                    ansible-playbook worker-setup.yaml
+                    ansible-playbook -i control_plane_hosts master-setup.yaml
+                    ansible-playbook -i worker_hosts worker-setup.yaml
                     '''
                 }
             }
