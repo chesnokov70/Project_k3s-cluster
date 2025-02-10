@@ -19,7 +19,24 @@ resource "aws_iam_role" "k3s_node_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
+      },
+
+      {
+        Effect: "Allow",
+        Action: "iam:CreateRole",
+        Resource: "arn:aws:iam::888577066630:role/k3s_node_role"
+      },
+
+      {
+        Effect: "Allow",
+        Principal: {
+        AWS: "arn:aws:iam::888577066630:role/jenkins_role_devops_course"
+        },
+        Action: "sts:AssumeRole"
       }
+
+
+
     ]
   })
 }
