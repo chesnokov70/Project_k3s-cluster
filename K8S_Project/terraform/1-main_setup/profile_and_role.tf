@@ -21,6 +21,24 @@ resource "aws_iam_role" "k3s_node_role" {
         }
       },
 
+          {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    },
+
+      {
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:AttachRolePolicy",
+        "iam:PutRolePolicy"
+      ],
+      "Resource": "arn:aws:iam::888577066630:role/k3s_node_role"
+    },
+
       {
         Effect: "Allow",
         Action: "iam:CreateRole",
@@ -34,8 +52,6 @@ resource "aws_iam_role" "k3s_node_role" {
         },
         Action: "sts:AssumeRole"
       }
-
-
 
     ]
   })
