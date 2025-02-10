@@ -20,6 +20,7 @@ data "aws_subnets" "k3s_public_subnets" {
 }
 
 data "aws_instances" "asg_instances" {
+  depends_on = [aws_autoscaling_group.k3s_master_asg]
   instance_tags = {
     "aws:autoscaling:groupName" = aws_autoscaling_group.k3s_master_asg.name
   }
