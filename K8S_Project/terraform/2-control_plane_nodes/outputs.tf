@@ -10,8 +10,13 @@ output "k3s_master_instance_public_dns" {
 }
 
 resource "local_file" "ansible-hosts" {
-  filename = "../../ansible/hosts"
+  filename = "../../ansible/control_plane_hosts"
   content = templatefile("./templates/ansible-hosts.tftpl", {
-    master-server   = data.aws_instances.asg_instances.public_ips[0]
+    public-ip   = data.aws_instances.asg_instances.public_ips[0]
   })
+}
+
+resource "local_file" "ansible-hosts-ec2" {
+  filename = "../../ansible/control_plane_ip"
+  content = data.aws_instances.asg_instances.public_ips[0]
 }
