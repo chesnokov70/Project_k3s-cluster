@@ -1,9 +1,9 @@
 - name: Launch Master Node
-  hosts: all
+  hosts:  master-server 
   become: true
   vars:
-    non_root_user: ches #ubuntu  # Replace with your non-root username
-    master_ip_public: "{{ lookup('file', 'hosts') | trim }}"  # master_ip_public.txt
+    non_root_user: ubuntu  # Replace with your non-root username
+    master_ip_public: "{{ lookup('file', 'control_plane_ip') | trim }}"
   tasks:
     - name: Update apt and install dependencies
       apt:
@@ -16,7 +16,7 @@
 
     - name: Start k3s master node
       shell: |
-          curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik --disable servicelb --tls-san {{ master_ip_public }}" sh -s - --token u2Qw5PbXC887MMv85LeGSergeiChes
+          curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik --disable servicelb --tls-san {{ master_ip_public }}" sh -s - --token u2Qw5PbXC887MMv85LeG
       args: 
         chdir: /tmp
         creates: /etc/systemd/system/k3s.service
@@ -27,7 +27,7 @@
       register: kubeconfig_content
 
     - name: Save kubeconfig content to file
-      become: false  #true
+      become: true
       delegate_to: localhost
       run_once: true
       copy:
@@ -35,22 +35,22 @@
         dest: "{{ playbook_dir }}/kubeconfig"
 
     - name: Ensure the script is executable
-      become: false  # true
+      become: true
       delegate_to: localhost
       run_once: true
       file:
-        path: "{{ playbook_dir }}/update_ip.sh"
+        path: "{{ playbook_dir }}/create_kubeconfig.sh"
         mode: '0755'
 
     - name: Execute the script to update the kubeconfig file
-      become: false  # true
+      become: true
       delegate_to: localhost
       run_once: true
-      command: "{{ playbook_dir }}/update_ip.sh {{ playbook_dir }}/hosts {{ playbook_dir }}/kubeconfig"  # master_ip_public.txt
+      command: "{{ playbook_dir }}/create_kubeconfig.sh {{ playbook_dir }}/control_plane_ip {{ playbook_dir }}/kubeconfig"
       register: script_output
 
     - name: retreive the updated kubeconfig file
-      become: false  # true
+      become: true
       delegate_to: localhost
       shell: cat "{{ playbook_dir }}/kubeconfig"
       register: kubeconfig_proper_output
@@ -60,13 +60,12 @@
         msg: "{{ kubeconfig_proper_output.stdout }}"
 
     - name: Ensure the /var/lib/jenkins/.kube/ directory exists
-      become: yes
+      become: true
       delegate_to: localhost
       file:
         path: "/var/lib/jenkins/.kube/"
         state: directory
         owner: 'jenkins'
-        group: jenkins
         mode: '0755'
       
     - name: Copy k3s configuration file to jenkins workdir directory

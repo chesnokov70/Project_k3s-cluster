@@ -35,7 +35,65 @@ pipeline {
             }
         }
 
-        stage('Initialize') {
+        stage('Workers Initialize') {
+            steps {
+                dir('K8S_Project/terraform/3-worker_setup') {
+                    sh '''
+                        terraform init
+                    '''
+                }
+            }
+        }
+        
+        stage('Workers Destroy Plan') {
+            steps {
+                dir('K8S_Project/terraform/3-worker_setup') {
+                    sh '''
+                        terraform plan -destroy -out=destroy-tfplan
+                    '''
+                }
+            }
+        }
+
+        stage('Workers Destroy Apply') {
+            steps {
+                dir('K8S_Project/terraform/3-worker_setup') {
+                    sh '''
+                        terraform apply -input=false "destroy-tfplan"
+                    '''
+                }
+            }
+        }
+        stage('Control Plane Initialize') {
+            steps {
+                dir('K8S_Project/terraform/2-control_plane_nodes') {
+                    sh '''
+                        terraform init
+                    '''
+                }
+            }
+        }
+         stage('Control Plane Destroy Plan') {
+            steps {
+                dir('K8S_Project/terraform/2-control_plane_nodes') {
+                    sh '''
+                        terraform plan -destroy -out=destroy-tfplan
+                    '''
+                }
+            }
+        }
+
+        stage('Control Plane Destroy Apply') {
+            steps {
+                dir('K8S_Project/terraform/2-control_plane_nodes') {
+                    sh '''
+                        terraform apply -input=false "destroy-tfplan"
+                    '''
+                }
+            }
+        }
+
+        stage('Main Initialize') {
             steps {
                 dir('K8S_Project/terraform/1-main_setup') {
                     sh '''
@@ -43,7 +101,7 @@ pipeline {
                     '''
                 }
             }
-        }
+        } 
 
         stage('Destroy Plan') {
             steps {

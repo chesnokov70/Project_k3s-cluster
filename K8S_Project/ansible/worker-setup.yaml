@@ -1,9 +1,9 @@
 - name: Launch Worker Node
-  hosts: all
+  hosts: worker-server
   become: true
   vars:
     non_root_user: ubuntu  # Replace with your non-root username
-    master_ip: "{{ lookup('file', 'master_ip.txt') | trim }}" #pull master ip from terraform output
+    master_ip: "{{ lookup('file', 'control_plane_ip') | trim }}" #pull master ip from terraform output
   tasks:
 
     - name: Update apt and install dependencies
