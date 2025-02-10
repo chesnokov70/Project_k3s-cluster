@@ -14,44 +14,46 @@ resource "aws_iam_role" "k3s_node_role" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-
-          {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    },
-
-      {
-      "Effect": "Allow",
-      "Action": [
-        "iam:CreateRole",
-        "iam:AttachRolePolicy",
-        "iam:PutRolePolicy"
-      ],
-      "Resource": "arn:aws:iam::888577066630:role/k3s_node_role"
-    },
-
-      {
-        Effect: "Allow",
-        Action: "iam:CreateRole",
-        Resource: "arn:aws:iam::888577066630:role/k3s_node_role"
-      },
-
-      {
-        Effect: "Allow",
-        Principal: {
-        AWS: "arn:aws:iam::888577066630:role/jenkins_role_devops_course"
-        },
-        Action: "sts:AssumeRole"
-      }
+			"Action": [
+				"ec2:*",
+				"s3:*",
+				"iam:CreateRole",
+				"iam:DeleteRole",
+				"iam:AttachRolePolicy",
+				"iam:DetachRolePolicy",
+				"iam:PutRolePolicy",
+				"iam:ListAttachedRolePolicies",
+				"iam:ListRolePolicies",
+				"iam:ListRoleTags",
+				"iam:GetRole",
+				"iam:GetRolePolicy",
+				"iam:PassRole",
+				"iam:ListRoles",
+				"iam:DeleteRolePolicy",
+				"iam:CreateInstanceProfile",
+				"iam:ListInstanceProfilesForRole",
+				"iam:GetInstanceProfile",
+				"iam:DeleteRole",
+				"iam:DeleteInstanceProfile",
+				"iam:AddRoleToInstanceProfile",
+				"iam:RemoveRoleFromInstanceProfile",
+				"iam:TagRole",
+				"iam:GetPolicy",
+				"iam:ListPolicies",
+				"autoscaling:Describe*",
+				"autoscaling:UpdateAutoScalingGroup",
+				"autoscaling:CreateAutoScalingGroup",
+				"autoscaling:DeleteAutoScalingGroup",
+				"ssm:GetParameter",
+				"ssm:GetParameters",
+				"ssm:DescribeParameters",
+				"ssm:PutParameter",
+				"ssm:ListTagsForResource",
+				"ssm:DeleteParameter"
+			],
+			"Effect": "Allow",
+			"Resource": "*"
+		}
 
     ]
   })
