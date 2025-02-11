@@ -1,4 +1,5 @@
 data "aws_instances" "asg_instances" {
+  depends_on = [aws_autoscaling_group.k3s_worker_asg]
   instance_tags = {
     "aws:autoscaling:groupName" = "K3S Worker ASG"
   }

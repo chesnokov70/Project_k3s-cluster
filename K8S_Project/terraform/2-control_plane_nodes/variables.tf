@@ -20,5 +20,5 @@ variable "instance_type" {
 variable "instance_key" {
   description = "Enter Instance Key"
   type        = string
-  default     = "ssh_instance_key"
+  default     = "k3s-keypair"
 }

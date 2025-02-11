@@ -24,7 +24,7 @@ pipeline {
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'SparseCheckoutPaths',
-                            sparseCheckoutPaths: [[path: 'K8S_Project/terraform/']]
+                            sparseCheckoutPaths: [[path: 'K8S_Project/']]
                         ]],
                         userRemoteConfigs: [[
                             url: env.GIT_REPO_URL,
@@ -46,8 +46,7 @@ pipeline {
                 sudo apt install awscli -y
                  '''
             }
-        }        
-
+        }
         stage('Initialize and Plan') {
             steps {
                 dir('K8S_Project/terraform/1-main_setup') {

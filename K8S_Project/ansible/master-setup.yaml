@@ -1,5 +1,5 @@
 - name: Launch Master Node
-  hosts:  master-server 
+  hosts:  all 
   become: true
   vars:
     non_root_user: ubuntu  # Replace with your non-root username
