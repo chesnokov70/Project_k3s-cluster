@@ -2,7 +2,7 @@ resource "aws_launch_template" "k3s_master" {
   name_prefix   = "k3s-master-"
   image_id      = data.aws_ami.ubuntu_ami.id # Ubuntu amd64 (x86_64)
   instance_type = var.instance_type            # Update as necessary
-  key_name      = var.instance_key       # Update with your SSH key name
+  key_name      = "ssh_instance_key"       # Update with your SSH key name
   # default_version = 1 suppose to be used to set launch tempolate to latest version
 
 
