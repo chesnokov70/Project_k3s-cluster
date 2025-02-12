@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File path
-file_path="pacman.yaml"
+file_path="2-pacman.yaml"
 new_host=$k3s_master_instance_public_dns
 
 # Step 1: Replace the host and extract the Ingress section
