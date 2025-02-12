@@ -2,7 +2,7 @@ resource "aws_launch_template" "k3s_worker" {
   name_prefix   = "k3s-worker-"
   image_id      = data.aws_ami.ubuntu_ami.id # Ubuntu amd64 (x86_64) #"ami-053b0d53c279acc90"
   instance_type = var.instance_type
-  key_name      = "ssh_instance_key" # use your key pair name
+  key_name      = "k3s-keypair" # use your key pair name
   # default_version = 1 suppose to be used to set launch tempolate to latest version
 
   vpc_security_group_ids = [data.aws_security_group.k3s_sg.id] 
