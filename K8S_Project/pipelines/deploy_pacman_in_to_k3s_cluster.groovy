@@ -41,7 +41,7 @@ pipeline {
                     script {
                         sh '''
                         sudo bash update_host_pacman.sh
-                        cat pacman.yaml
+                        cat 2-pacman.yaml
                         '''
                     }
                 }
