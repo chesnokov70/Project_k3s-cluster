@@ -92,6 +92,11 @@ pipeline {
                     sh '''
                         terraform init
                         terraform plan -out=tfplan
+                        k3s_master_instance_public_dns=$(terraform output -raw k3s_master_instance_public_dns)
+                        # Set it as an environment variable
+                        export k3s_master_instance_public_dns="$k3s_master_instance_public_dns"
+                        # Optional: Print the environment variable
+                        echo "The instance public DNS is set to: $k3s_master_instance_public_dns"
                     '''
                 }
             }
@@ -127,7 +132,16 @@ pipeline {
                     }
                 }
             }
-        }        
+        } 
+        stage('deploy Pacman') {
+            steps {
+                script {
+                    // Trigger another Jenkins pipeline with pacman
+                    build job: 'deploy_pacman_in_to_k3s_cluster',
+                    wait: true
+                }
+            }
+        }               
     }
 
     post {

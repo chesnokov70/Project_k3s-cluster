@@ -86,3 +86,7 @@ worker_setupcd
 
 kubectl label node ip-10-0-2-12 node-role.kubernetes.io/worker=worker
 kubectl label node ip-10-0-2-21 node-role.kubernetes.io/worker=worker 
+
+aws ssm get-parameter --name "/K3S_project/kubeconfig" --with-decryption --query "Parameter.Value" --output text > config
+
+export KUBECONFIG=k3s_test.yaml

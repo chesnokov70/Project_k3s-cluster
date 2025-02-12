@@ -9,12 +9,6 @@ variable "private_subnet_cidr" {
   default     = "10.0.2.0/24" # 256 hosts
 }
 
-variable "allow_ports" {
-  description = "List of Ports to open for server"
-  type        = list
-  default     = ["22", "80", "443", "22", "6443", "8080", "10250"]
-}
-
 variable "region" {
   description = "Please Enter AWS Region to deploy Server"
   type        = string

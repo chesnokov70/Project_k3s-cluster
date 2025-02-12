@@ -10,8 +10,15 @@ variable "region" {
   type        = string
   default     = "us-east-1"
 }
+
 variable "instance_key" {
   description = "Enter Instance Key"
   type        = string
   default     = "k3s-keypair"
+}
+
+variable "instance_type" {
+  description = "Enter Instance Type"
+  type        = string
+  default     = "c6a.large"
 }
