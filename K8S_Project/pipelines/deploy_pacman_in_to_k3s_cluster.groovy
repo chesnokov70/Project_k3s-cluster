@@ -53,7 +53,6 @@ pipeline {
                 dir('K8S_Project/ingress_setup_cluster/'){
                     script {
                         sh '''
-                        kubectx default
                         kubectl get nodes
                         kubectl apply -f 1-metal_lb.yaml
                         kubectl apply -f 2-nginx-ingress.yaml
