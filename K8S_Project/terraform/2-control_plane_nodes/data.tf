@@ -31,7 +31,7 @@ data "aws_iam_instance_profile" "k3s_node_instance_profile" {
 }
 
 data "aws_instance" "k3s_master_instance_public_dns" {
-  # depends_on = [aws_autoscaling_group.k3s_master_asg]
+  depends_on = [aws_autoscaling_group.k3s_master_asg]
   instance_id = data.aws_instances.asg_instances.ids[0]
 }
 
