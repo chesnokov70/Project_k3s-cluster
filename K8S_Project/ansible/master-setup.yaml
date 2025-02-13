@@ -63,7 +63,7 @@
       become: true
       delegate_to: localhost
       file:
-        path: "/var/lib/jenkins/.kube/"
+        path: "/var/jenkins_home/.kube/"
         state: directory
         owner: 'jenkins'
         mode: '0755'
@@ -73,7 +73,7 @@
       delegate_to: localhost
       ansible.builtin.copy:
         content: "{{ kubeconfig_proper_output.stdout }}"
-        dest: "/var/lib/jenkins/.kube/config"
+        dest: "/var/jenkins_home/.kube/config"
         owner: 'jenkins'
         mode: '0755'
 
