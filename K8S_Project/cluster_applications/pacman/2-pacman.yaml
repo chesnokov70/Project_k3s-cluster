@@ -13,7 +13,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: ec2-44-211-209-194.compute-1.amazonaws.com # Replace with your own domain
+    - host: ec2-44-197-199-150.compute-1.amazonaws.com # Replace with your own domain
       http:
         paths:
           - path: /
