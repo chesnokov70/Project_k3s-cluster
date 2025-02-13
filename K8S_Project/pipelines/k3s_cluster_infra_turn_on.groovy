@@ -41,7 +41,7 @@ pipeline {
                 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
                 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
                 sudo apt-get update
-                sudo apt-get install -y kubeadm kubelet kubectl
+                sudo apt-get install -y jq kubeadm kubelet kubectl
                 sudo apt-get install -y ansible
                 sudo apt install awscli -y
                  '''
@@ -54,7 +54,7 @@ pipeline {
                         terraform init
                         terraform plan -out=tfplan
                     '''
-                }
+                }https://chatgpt.com/c/67a43c64-3d28-8000-9d6f-70311e48a8f9
             }
         }
 
