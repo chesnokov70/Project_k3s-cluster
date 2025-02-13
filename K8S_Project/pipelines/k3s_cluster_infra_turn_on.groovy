@@ -54,7 +54,7 @@ pipeline {
                         terraform init
                         terraform plan -out=tfplan
                     '''
-                }https://chatgpt.com/c/67a43c64-3d28-8000-9d6f-70311e48a8f9
+                }
             }
         }
 
