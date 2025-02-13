@@ -41,7 +41,7 @@ pipeline {
                 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
                 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
                 sudo apt-get update
-                sudo apt-get install -y kubeadm kubelet kubectl
+                sudo apt-get install -y jq kubeadm kubelet kubectl
                 sudo apt-get install -y ansible
                 sudo apt install awscli -y
                  '''
@@ -73,6 +73,11 @@ pipeline {
                     sh '''
                         terraform init
                         terraform plan -out=tfplan
+                        k3s_master_instance_public_dns=$(terraform output -raw k3s_master_instance_public_dns)
+                        # Set it as an environment variable
+                        export k3s_master_instance_public_dns="$k3s_master_instance_public_dns"
+                        # Optional: Print the environment variable
+                        echo "The instance public DNS is set to: $k3s_master_instance_public_dns"                        
                     '''
                 }
             }
@@ -92,11 +97,6 @@ pipeline {
                     sh '''
                         terraform init
                         terraform plan -out=tfplan
-                        k3s_master_instance_public_dns=$(terraform output -raw k3s_master_instance_public_dns)
-                        # Set it as an environment variable
-                        export k3s_master_instance_public_dns="$k3s_master_instance_public_dns"
-                        # Optional: Print the environment variable
-                        echo "The instance public DNS is set to: $k3s_master_instance_public_dns"
                     '''
                 }
             }
