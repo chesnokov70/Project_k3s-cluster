@@ -40,6 +40,7 @@ pipeline {
                 dir('K8S_Project/cluster_applications/pacman/') {
                     script {
                         sh '''
+                        chmod +x ./update_host_pacman.sh
                         ./update_host_pacman.sh
                         cat 2-pacman.yaml
                         '''
