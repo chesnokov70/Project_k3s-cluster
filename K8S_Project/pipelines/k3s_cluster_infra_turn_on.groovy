@@ -12,6 +12,7 @@ pipeline {
     environment {
         GIT_REPO_URL = 'git@github.com:chesnokov70/Project_k3s-cluster.git'
         CREDENTIALS_ID = 'ssh_github_access_key' // Replace with your credential ID in Jenkins
+        KUBECONFIG = "/var/jenkins_home/.kube/config"    
     }
 
     stages {
