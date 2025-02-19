@@ -70,16 +70,12 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        if ! kubectl get namespace $NAMESPACE &> /dev/null
-                        then
-                            kubectl create namespace $NAMESPACE
-                        else
-                            echo "Namespace $NAMESPACE already exists."
-                        fi
+                        kubectl get namespace $NAMESPACE || kubectl create namespace $NAMESPACE
                     '''
                 }
             }
         }
+
 
         stage('Deploy Prometheus') {
             steps {
@@ -115,6 +111,7 @@ pipeline {
                 }
             }
         }
+        
     }
 
     post {  // This block must be inside `pipeline {}` but outside `stages {}`
