@@ -11,7 +11,7 @@ pipeline {
 
     environment {
         GIT_REPO_URL = 'git@github.com:chesnokov70/Project_k3s-cluster.git'
-        CREDENTIALS_ID = 'ssh_github_access_key' // Replace with your credential ID in Jenkins
+        CREDENTIALS_ID = 'ssh_github_access_key'
         KUBECONFIG = "/var/jenkins_home/.kube/config"   
         NAMESPACE = "monitoring" 
     }
@@ -116,8 +116,8 @@ pipeline {
             }
         }
     }
-    
-    post {
+
+    post {  // This block must be inside `pipeline {}` but outside `stages {}`
         success {
             echo '✅ Prometheus and Grafana have been successfully deployed!'
         }
