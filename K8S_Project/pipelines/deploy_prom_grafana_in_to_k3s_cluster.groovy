@@ -43,11 +43,12 @@ pipeline {
                     sh '''
                         mkdir -p ~/.kube
                         aws ssm get-parameter --name "/K3S_project/kubeconfig" --with-decryption --query "Parameter.Value" --output text > ~/.kube/config
-                        export KUBECONFIG=$KUBECONFIG_PATH
+                        export KUBECONFIG=$KUBECONFIG
                     '''
                 }
             }
         }
+
         stage('Install Helm') {
             steps {
                 script {
@@ -55,7 +56,7 @@ pipeline {
                         if ! command -v helm &> /dev/null
                         then
                             echo "Helm not found, installing..."
-                            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+                            curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -s
                         else
                             echo "Helm is already installed."
                         fi
@@ -64,37 +65,46 @@ pipeline {
                 }
             }
         }
+
         stage('Create Namespace') {
             steps {
                 script {
                     sh '''
-                        kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+                        if ! kubectl get namespace $NAMESPACE &> /dev/null
+                        then
+                            kubectl create namespace $NAMESPACE
+                        else
+                            echo "Namespace $NAMESPACE already exists."
+                        fi
                     '''
                 }
             }
         }
+
         stage('Deploy Prometheus') {
             steps {
                 script {
                     sh '''
                         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                         helm repo update
-                        helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace $NAMESPACE
+                        helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace $NAMESPACE --wait
                     '''
                 }
             }
         }
+
         stage('Deploy Grafana') {
             steps {
                 script {
                     sh '''
                         helm repo add grafana https://grafana.github.io/helm-charts
                         helm repo update
-                        helm upgrade --install grafana grafana/grafana --namespace $NAMESPACE --set adminPassword=admin
+                        helm upgrade --install grafana grafana/grafana --namespace $NAMESPACE --set adminPassword=admin --wait
                     '''
                 }
             }
         }
+
         stage('Verify Deployment') {
             steps {
                 script {
@@ -105,18 +115,17 @@ pipeline {
                 }
             }
         }
+    }
+    
     post {
         success {
-            echo 'Prometheus and Grafana have been successfully deployed!'
+            echo '✅ Prometheus and Grafana have been successfully deployed!'
         }
         failure {
-            echo 'Deployment failed. Check logs for details.'
+            echo '❌ Deployment failed. Check logs for details.'
         }
         always {
             cleanWs()
         }
-    } 
+    }
 }
-}
-
-
