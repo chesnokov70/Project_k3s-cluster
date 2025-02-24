@@ -92,19 +92,57 @@ pipeline {
             }
         }
 
+        // stage('Retrieve ArgoCD Admin Password') {
+        //     steps {
+        //         script {
+        //             def argocdPassword = sh(
+        //                 script: "kubectl get secret argocd-initial-admin-secret -n ${env.NAMESPACE} -o jsonpath='{.data.password}' | base64 --decode",
+        //                 returnStdout: true
+        //             ).trim()
+        //             echo "🔑 ArgoCD Admin Password: ${argocdPassword}"
+        //         }
+        //     }
+        // }     
+
+        #---------------------------------
         stage('Retrieve ArgoCD Admin Password') {
             steps {
                 script {
-                    def argocdPassword = sh(
-                        script: "kubectl get secret argocd-initial-admin-secret -n ${env.NAMESPACE} -o jsonpath='{.data.password}' | base64 --decode",
-                        returnStdout: true
-                    ).trim()
-                    echo "🔑 ArgoCD Admin Password: ${argocdPassword}"
+                    def maxRetries = 5
+                    def attempt = 0
+                    def secretExists = ""
+
+                    while (attempt < maxRetries) {
+                        secretExists = sh(
+                            script: "kubectl get secret argocd-initial-admin-secret -n ${env.NAMESPACE} --ignore-not-found",
+                            returnStdout: true
+                        ).trim()
+
+                        if (secretExists) {
+                            break
+                        }
+
+                        echo "🔄 Waiting for ArgoCD admin secret... Attempt ${attempt + 1}/${maxRetries}"
+                        sh 'sleep 5'  // Wait 5 seconds before retrying
+                        attempt++
+                    }
+
+                    if (secretExists) {
+                        def argocdPassword = sh(
+                            script: "kubectl get secret argocd-initial-admin-secret -n ${env.NAMESPACE} -o jsonpath='{.data.password}' | base64 --decode",
+                            returnStdout: true
+                        ).trim()
+                        echo "🔑 ArgoCD Admin Password: ${argocdPassword}"
+                    } else {
+                        echo "⚠️ ArgoCD Admin Secret not found! Resetting password..."
+                        sh '''
+                            kubectl -n argocd patch secret argocd-secret -p '{"stringData": {"admin.password": "$2a$10$uW8.YhNkhzrQ/XVy5lfnpeItQZp9czOrRei5kfjhxu9Dj4jlE52uS", "admin.passwordMtime": "'$(date +%FT%T%Z)'"}}'
+                        '''
+                        echo "✅ Password reset to 'admin'."
+                    }
                 }
             }
-        }     
-
-        #---------------------------------
+        }
             
         #---------------------------------   
 

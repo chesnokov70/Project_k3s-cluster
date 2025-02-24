@@ -168,3 +168,7 @@ kubectl exec -n monitoring -it $(kubectl get pod -n monitoring -l app.kubernetes
 grafana-cli admin reset-admin-password NEW_PASSWORD
 # Exit the Pod:
 exit
+
+#---------------------------------------------------------------------
+
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath='{.data.password}' | base64 --decode
