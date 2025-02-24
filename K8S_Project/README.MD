@@ -91,6 +91,8 @@ aws ssm get-parameter --name "/K3S_project/kubeconfig" --with-decryption --query
 
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 
+http://localhost:3000
+
 export KUBECONFIG=k3s_test.yaml
 
 1. Установка Helm (если не установлен)

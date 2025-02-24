@@ -102,7 +102,11 @@ pipeline {
                     echo "🔑 ArgoCD Admin Password: ${argocdPassword}"
                 }
             }
-        }        
+        }     
+
+        #---------------------------------
+            
+        #---------------------------------   
 
         stage('Verify ArgoCD Deployment') {
             steps {
