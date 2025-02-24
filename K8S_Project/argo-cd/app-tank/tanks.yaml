@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tanks
+spec:
+  destination:
+    name: in-cluster
+    namespace: tanks
+    server: ''
+  source:
+    path: tanks
+    repoURL: https://github.com/genrum/argo
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true

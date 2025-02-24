@@ -89,6 +89,8 @@ kubectl label node ip-10-0-2-21 node-role.kubernetes.io/worker=worker
 
 aws ssm get-parameter --name "/K3S_project/kubeconfig" --with-decryption --query "Parameter.Value" --output text > ~/.kube/config
 
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+
 export KUBECONFIG=k3s_test.yaml
 
 1. Установка Helm (если не установлен)

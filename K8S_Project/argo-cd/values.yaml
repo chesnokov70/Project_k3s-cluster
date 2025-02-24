@@ -1,0 +1,39 @@
+nameOverride: argocd-devops-2024-oct
+fullnameOverride: argocd-devops-2024-oct
+namespaceOverride: argocd-devops-2024-oct
+
+namespace:
+  create: true
+
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 1
+
+repoServer:
+  replicas: 2
+
+applicationSet:
+  replicas: 2
+
+global:
+  domain: argocd-devops-2024-oct.paxel.ca
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    extraTls:
+      - hosts:
+        - argocd-devops-2024-oct.paxel.ca
+        # Based on the ingress controller used secret might be optional
+        secretName: argocd-devops-2024-oct.paxel.ca-tls
+  replicas: 2
