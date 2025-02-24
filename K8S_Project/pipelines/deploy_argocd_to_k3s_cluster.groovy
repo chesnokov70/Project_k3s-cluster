@@ -92,6 +92,18 @@ pipeline {
             }
         }
 
+        stage('Retrieve ArgoCD Admin Password') {
+            steps {
+                script {
+                    def argocdPassword = sh(
+                        script: "kubectl get secret argocd-initial-admin-secret -n ${env.NAMESPACE} -o jsonpath='{.data.password}' | base64 --decode",
+                        returnStdout: true
+                    ).trim()
+                    echo "🔑 ArgoCD Admin Password: ${argocdPassword}"
+                }
+            }
+        }        
+
         stage('Verify ArgoCD Deployment') {
             steps {
                 script {
